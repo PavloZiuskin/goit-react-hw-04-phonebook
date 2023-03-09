@@ -1,48 +1,51 @@
-import { Component } from "react";
+import { useState } from "react";
 import PropTypes from 'prop-types';
 import {FormSt,Label} from "components/Form/form.styled"
 
-export class Form extends Component{
-    state = {
-          name: '',
-          number: ''
+export const Form =({onAddContact})=>{
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const handleChange = (e)=> {
+    const { name, value } = e.currentTarget;
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      case 'number':
+        setNumber(value);
+        break;
+      default:
+        return;
+    }
   }
-  handleChange = (e)=> {
-    const { name,value} = e.currentTarget
-    this.setState({[name]: value})
-  
-  }
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-      this.props.onSubmit(this.state)
-    this.resetForm()
-
+    onAddContact(name,number)
+    resetForm()
   }
-  resetForm() {
-    this.setState({
-        name: '',
-        number:''})
+  const resetForm = () => {
+    setName('');
+    setNumber('');
   }
-      render() {
-    const {  name,number } = this.state;
+      
     return (
       
     
         
-        <FormSt onSubmit={this.handleSubmit}>
-          <Label >Name
-              <input
-                onChange={this.handleChange}
-              type="text"
-                name="name"
-                value={name}
-              pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-              title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-              required/>
+        <FormSt onSubmit={handleSubmit}>
+                <Label >Name
+                    <input
+                        onChange={handleChange}
+                        type="text"
+                        name="name"
+                        value={name}
+                        pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+                        title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+                        required/>
                 </Label>
                 <Label >Number
                     <input
-                        onChange={this.handleChange}
+                        onChange={handleChange}
                         type="tel"
                         name="number"
                         value={number}
@@ -55,8 +58,8 @@ export class Form extends Component{
       
       
   )
-  }
 }
+
 Form.propTypes = {
-  onSubmit: PropTypes.func.isRequired
+  onAddContact: PropTypes.func.isRequired
 }
